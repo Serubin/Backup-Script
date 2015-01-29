@@ -1,18 +1,24 @@
 #!/bin/bash
-
 declare -A LOCATIONS
 
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
-fi
+############### CONFIG ###############
+dir="/backup/" # Backup location
+
+mysqlpass="pass" # Mysql root password
+
+fileperm=660 # Sets tar.gz files to this permission
+useraccess="user" # Grant grp permission to this user (own stays root)
 
 #BACKUP LOCATIONS#
 LOCATIONS[Homes]="/home/"
 LOCATIONS[WWW]="/var/www/"
 LOCATIONS[ApacheConf]="/etc/apache2"
+############## CONFIG END ##############
 
-dir="/backup/"
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 
 DATE=$(date +%Y-%m-%d-%Hh%M)
 
@@ -29,8 +35,8 @@ for i in "${!LOCATIONS[@]}"; do
 	tar -czf  "$BACKUP/$key-$DATE.tar.gz" "$value" | pv $BACKUP/$key-$DATE.tar.gz
 done
 
-mysqldump -u root -p --all-databases > $BACKUP/SQL-$DATE.sql
+mysqldump -u root -p$mysqlpass --all-databases > $BACKUP/SQL-$DATE.sql
 
 # Protect files
-find $BACKUP -exec chmod 640 {} \;
-find $BACKUP -exec chgrp user {} \;
+find $BACKUP -exec chmod $fileperm {} \;
+find $BACKUP -exec chgrp $useraccess {} \;
