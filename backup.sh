@@ -4,7 +4,7 @@ declare -A LOCATIONS
 ############### CONFIG ###############
 dir="/backup/" # Backup location
 
-mysqlpass="pass" # Mysql root password
+mysqlpass="password" # Mysql root password
 
 fileperm=660 # Sets tar.gz files to this permission
 useraccess="user" # Grant grp permission to this user (own stays root)
@@ -12,7 +12,7 @@ useraccess="user" # Grant grp permission to this user (own stays root)
 #BACKUP LOCATIONS#
 LOCATIONS[Homes]="/home/"
 LOCATIONS[WWW]="/var/www/"
-LOCATIONS[ApacheConf]="/etc/apache2"
+LOCATIONS[ApacheConf]="/etc/apache2""
 ############## CONFIG END ##############
 
 if [ "$EUID" -ne 0 ]
@@ -32,7 +32,7 @@ for i in "${!LOCATIONS[@]}"; do
 	value="${LOCATIONS[$i]}"
 
 	echo "Backing up $i !"
-	tar -czf  "$BACKUP/$key-$DATE.tar.gz" "$value" | pv $BACKUP/$key-$DATE.tar.gz
+	tar -cpzvf  "$BACKUP/$key-$DATE.tar.gz" "$value"
 done
 
 mysqldump -u root -p$mysqlpass --all-databases > $BACKUP/SQL-$DATE.sql
