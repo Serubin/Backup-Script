@@ -12,7 +12,7 @@ useraccess="user" # Grant grp permission to this user (own stays root)
 #BACKUP LOCATIONS#
 LOCATIONS[Homes]="/home/"
 LOCATIONS[WWW]="/var/www/"
-LOCATIONS[ApacheConf]="/etc/apache2""
+LOCATIONS[ApacheConf]="/etc/apache2"
 ############## CONFIG END ##############
 
 if [ "$EUID" -ne 0 ]
