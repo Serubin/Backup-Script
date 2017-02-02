@@ -1,0 +1,19 @@
+#!/bin/bash
+declare -A LOCATIONS
+############### CONFIG ###############
+
+online_auth_token=""
+online_safe_id=""
+online_ssh_key_id=""
+
+
+dir="/bak/"
+
+mysqlpass=""
+fileperm="700"
+user_access="bak"
+
+LOCATIONS[Name]="/Path/"
+
+
+
