@@ -4,12 +4,13 @@ declare -A LOCATIONS
 
 online_auth_token=""
 online_safe_id=""
+online_archive_id=""
 online_ssh_key_id=""
 
 
-dir="/bak/"
-
+mount_point="/mnt/bak/"
 mysqlpass=""
+
 fileperm="700"
 user_access="bak"
 
