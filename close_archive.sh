@@ -11,8 +11,9 @@ source $(pwd)/on_curl.func.sh
 DATE=$(date +%Y-%m-%d)
 backup_name="${HOST} ${DATE} full backup"
 
-fusermount -u ${mount_point}
-
-# Create archive
+# Rearchive data
 on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/archive" "{}"
+
+# Delete ssh information file
+rm $(pwd)/ssh_info
 

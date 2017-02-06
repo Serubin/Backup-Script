@@ -12,12 +12,23 @@ DATE=$(date +%Y-%m-%d)
 backup_name="${HOST} ${DATE} full backup"
 
 
-# Create archive
+# Open archive
 on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/unarchive" "{\"protocols\": [\"SSH\"],\"ssh_keys\": [\"${online_ssh_key_id}\"], \"location_id\": [1]}"
 
-ssh_port=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket" | python -c "import sys, json; print json.load(sys.stdin)['credentials'][0]['uri'].split(':').pop()")
+# Fetch bucket info
+bucket=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket")
 
-mkdir -p /mnt/bak 2> /dev/null
+# Retreive and dismantle ssh infomation
+ssh_info=$(echo $bucket | python -c "import sys, json; retval = json.load(sys.stdin)['credentials'][0]['uri'].replace('ssh://', '').split(':'); print ' '.join(retval)")
+ssh_info=($ssh_info)
 
-sshfs -p ${ssh_port} -o ssh_command='ssh -i /root/.ssh/bak_rsa' c14ssh@${archive_id}.buffer.c14.io:/buffer /mnt/bak
+
+# Write to ssh information file
+touch $(pwd)/ssh_info
+
+cat << EOF > $(pwd)/ssh_info
+    #!/bin/bash
+    ssh_uri=${ssh_info[0]}
+    ssh_port=${ssh_info[1]}
+EOF
 
