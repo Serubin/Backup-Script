@@ -26,7 +26,7 @@ for i in "${!LOCATIONS[@]}"; do
 	value="${LOCATIONS[$i]}"
 
 	echo "Backing up $i !"
-    rsync -avR --inplace -e "ssh -p ${ssh_port} -i /root/.ssh/bak_rsa" ${value} ${ssh_uri}:/buffer/
+    rsync -avR --inplace -e "ssh -p ${ssh_port} -i /root/.ssh/bak_rsa -o \"StrictHostKeyChecking no\"" ${value} ${ssh_uri}:/buffer/
 done
 
 mysqldump -u root -p${mysqlpass} --all-databases > ${mount_point}/mysql_dump.sql # TODO move to rsync
