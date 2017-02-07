@@ -6,6 +6,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 source $(pwd)/backup.conf
+source $(pwd)/on_curl.func.sh
 
 # Fetch bucket info
 bucket=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket")
