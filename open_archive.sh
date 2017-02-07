@@ -11,9 +11,12 @@ source $(pwd)/on_curl.func.sh
 DATE=$(date +%Y-%m-%d)
 backup_name="${HOST} ${DATE} full backup"
 
+# Fetch location
+location=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/location")
+location=$(echo $location | python -c "import sys, json; print json.load(sys.stdin)[0]['uuid_ref']")
 
 # Open archive
-on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/unarchive" "{\"protocols\": [\"SSH\"],\"ssh_keys\": [\"${online_ssh_key_id}\"], \"location_id\": [1]}"
+on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/unarchive" "{\"protocols\": [\"SSH\"],\"ssh_keys\": [\"${online_ssh_key_id}\"], \"location_id\": \"${location}\"}"
 
 # Fetch bucket info
 bucket=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket")
