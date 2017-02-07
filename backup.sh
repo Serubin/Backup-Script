@@ -6,7 +6,17 @@ if [ "$EUID" -ne 0 ]
 fi
 
 source $(pwd)/backup.conf
-source $(pwd)/ssh_info
+
+# Fetch bucket info
+bucket=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket")
+
+# Retreive and dismantle ssh infomation
+ssh_info=$(echo $bucket | python -c "import sys, json; retval = json.load(sys.stdin)['credentials'][0]['uri'].replace('ssh://', '').split(':'); print ' '.join(retval)")
+ssh_info=($ssh_info)
+
+# SSH info
+ssh_uri=${ssh_info[0]}
+ssh_port=${ssh_info[1]}
 
 
 ## now loop through the above array

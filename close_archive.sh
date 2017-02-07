@@ -14,6 +14,3 @@ DATE=$(date +%Y-%m-%d)
 on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/archive" "{}" 
 on_curl "PATCH" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}" "{\"name\": \"${HOSTNAME} - ${DATE}\"}" # Update name
 
-# Delete ssh information file
-rm $(pwd)/ssh_info
-
