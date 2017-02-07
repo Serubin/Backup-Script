@@ -12,7 +12,7 @@ DATE=$(date +%Y-%m-%d)
 backup_name="${HOSTNAME} - Current"
 
 # Open archive
-export online_archive_id=$(on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive" "{\"name\": \"${backup_name}\", \"description\": \"{$HOSTNAME}\", \"protocols\": [\"SSH\"],\"ssh_keys\": [\"${online_ssh_key_id}\"], \"location_id\": \"${location}\"}" | sed -e 's/"//g')
+export online_archive_id=$(on_curl "POST" "/storage/c14/safe/${online_safe_id}/archive" "{\"name\": \"${backup_name}\", \"description\": \"{$HOSTNAME}\", \"protocols\": [\"SSH\"],\"ssh_keys\": [\"${online_ssh_key_id}\"], \"platforms\": [1]}" | sed -e 's/"//g')
 
 
 perl -p -i -e 's/online_archive_id=".*"/online_archive_id="$ENV{online_archive_id}"/g;' $(pwd)/backup.conf
