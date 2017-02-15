@@ -1,12 +1,20 @@
 #!/bin/bash
 
+###
+# Backup.sh - rysnc backup script for online.net
+# @Serubin
+# MIT License
+###
+
+script_path="/backup/"
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
 
-source $(pwd)/backup.conf
-source $(pwd)/on_curl.func.sh
+source ${script_path}/backup.conf
+source ${script_path}/on_curl.func.sh
 
 # Fetch bucket info
 bucket=$(on_curl "GET" "/storage/c14/safe/${online_safe_id}/archive/${online_archive_id}/bucket")
@@ -29,5 +37,11 @@ for i in "${!LOCATIONS[@]}"; do
     rsync -avR --inplace -e "ssh -p ${ssh_port} -i /root/.ssh/bak_rsa -o \"StrictHostKeyChecking no\"" ${value} ${ssh_uri}:/buffer/
 done
 
-mysqldump -u root -p${mysqlpass} --all-databases > ${mount_point}/mysql_dump.sql # TODO move to rsync
+# Rsync sql dump
+mysqldump -u root -p${mysqlpass} --all-databases > /tmp/mysql_dump.sql 
+
+rsync -aR --inplace -e "ssh -p ${ssh_port} -i /root/.ssh/bak_rsa -o \"StrictHostKeyChecking no\"" /
+tmp/mysql_dump.sql ${ssh_uri}:/buffer/
+
+rm /tmp/mysql_dump.sql
 

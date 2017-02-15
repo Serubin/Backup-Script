@@ -1,12 +1,14 @@
 #!/bin/bash
 
+script_path="/backup/"
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
 
-source $(pwd)/backup.conf
-source $(pwd)/on_curl.func.sh
+source ${script_path}/backup.conf
+source ${script_path}/on_curl.func.sh
 
 DATE=$(date +%Y-%m-%d)
 
